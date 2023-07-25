@@ -52,7 +52,8 @@ public class PostRepository {
     public Post update(Post post) {
         Post result = postsData.get(post.getId());
         if (result != null) {
-            result = postsData.put(post.getId(), post);
+            postsData.put(post.getId(), post);
+            result = postsData.get(post.getId());
         } else {
             throw new NotFoundException("Wrong post id to update!");
         }
