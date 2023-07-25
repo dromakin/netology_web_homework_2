@@ -35,8 +35,12 @@ public class PostController {
         try {
             response.setContentType(APPLICATION_JSON);
             final var data = service.getById(id);
-            final var gson = new Gson();
-            response.getWriter().print(gson.toJson(data));
+            if (data == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            } else {
+                final var gson = new Gson();
+                response.getWriter().print(gson.toJson(data));
+            }
         } catch (IOException e) {
             logger.error(e);
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
