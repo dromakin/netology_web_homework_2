@@ -1,33 +1,31 @@
 package org.dromakin.service;
 
 
+import lombok.AllArgsConstructor;
 import org.dromakin.exception.NotFoundException;
 import org.dromakin.model.Post;
 import org.dromakin.repository.PostRepository;
 
 import java.util.List;
 
+@AllArgsConstructor
 public class PostService {
-  private final PostRepository repository;
+    private final PostRepository repository;
 
-  public PostService(PostRepository repository) {
-    this.repository = repository;
-  }
+    public List<Post> all() {
+        return repository.all();
+    }
 
-  public List<Post> all() {
-    return repository.all();
-  }
+    public Post getById(long id) {
+        return repository.getById(id).orElseThrow(NotFoundException::new);
+    }
 
-  public Post getById(long id) {
-    return repository.getById(id).orElseThrow(NotFoundException::new);
-  }
+    public Post save(Post post) {
+        return repository.saveUpdate(post);
+    }
 
-  public Post save(Post post) {
-    return repository.save(post);
-  }
-
-  public void removeById(long id) {
-    repository.removeById(id);
-  }
+    public void removeById(long id) {
+        repository.removeById(id);
+    }
 }
 
