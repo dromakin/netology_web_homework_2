@@ -64,6 +64,8 @@ public class PostRepository {
         Post tmp = postsData.remove(id);
         if (tmp == null) {
             throw new NotFoundException(id + " not found");
+        } else {
+            idData.decrementAndGet();
         }
     }
 }
