@@ -27,6 +27,9 @@ public class PostController {
             response.getWriter().print(gson.toJson(data));
         } catch (IOException e) {
             logger.error(e);
+            if (e.getCause() != null) {
+                e.getCause().printStackTrace();
+            }
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
@@ -37,9 +40,15 @@ public class PostController {
             final var data = service.getById(id);
             final var gson = new Gson();
             response.getWriter().print(gson.toJson(data));
+        } catch (NotFoundException e) {
+            logger.warn(e);
+            if (e.getCause() != null) {
+                e.getCause().printStackTrace();
+            }
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } catch (IOException e) {
             logger.error(e);
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -54,10 +63,10 @@ public class PostController {
         } catch (IOException e) {
             logger.error(e);
             if (post.getId() == 0) {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 if (e.getCause() != null) {
                     e.getCause().printStackTrace();
                 }
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -69,7 +78,7 @@ public class PostController {
             service.removeById(id);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (NotFoundException e) {
-            logger.error(e);
+            logger.warn(e);
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }

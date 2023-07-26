@@ -19,7 +19,7 @@ public class PostRepository {
 
     private volatile ConcurrentHashMap<Long, Post> postsData = new ConcurrentHashMap<>();
 
-    private AtomicLong idData = new AtomicLong(1);
+    private AtomicLong idData = new AtomicLong(1L);
 
     public List<Post> all() {
         return postsData.values().parallelStream().collect(Collectors.toList());
@@ -34,7 +34,7 @@ public class PostRepository {
         long id = post.getId();
 
         if (id == 0) {
-            post.setId(idData.incrementAndGet());
+            post.setId(idData.getAndIncrement());
             result = save(post);
 
         } else {
@@ -52,7 +52,8 @@ public class PostRepository {
     public Post update(Post post) {
         Post result = postsData.get(post.getId());
         if (result != null) {
-            result = postsData.put(post.getId(), post);
+            postsData.put(post.getId(), post);
+            result = postsData.get(post.getId());
         } else {
             throw new NotFoundException("Wrong post id to update!");
         }
@@ -63,6 +64,8 @@ public class PostRepository {
         Post tmp = postsData.remove(id);
         if (tmp == null) {
             throw new NotFoundException(id + " not found");
+        } else {
+            idData.decrementAndGet();
         }
     }
 }
