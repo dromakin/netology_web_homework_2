@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import org.dromakin.exception.NotFoundException;
 import org.dromakin.model.Post;
 import org.dromakin.repository.PostRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @AllArgsConstructor
+@Service
 public class PostService {
     private final PostRepository repository;
 
